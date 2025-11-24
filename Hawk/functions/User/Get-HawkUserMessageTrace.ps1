@@ -4,7 +4,7 @@
     Pull that last 7 days of message trace data for the specified user.
 .DESCRIPTION
         Pulls the basic message trace data for the specified user.
-        Can only pull the last 7 days as that is all we keep in get-messagetrace
+        Can only pull the last 7 days as that is all we keep in Get-MessageTraceV2.
 
         Further investigation will require Start-HistoricalSearch
 .PARAMETER UserPrincipalName
@@ -13,7 +13,7 @@ Single UPN of a user, commans seperated list of UPNs, or array of objects that c
 
     File: Message_Trace.csv
     Path: \<User>
-    Description: Output of Get-MessageTrace -Sender <primarysmtpaddress>
+    Description: Output of Get-MessageTraceV2 -Sender <primarysmtpaddress>
 .EXAMPLE
 
     Get-HawkUserMessageTrace -UserPrincipalName user@contoso.com
@@ -53,9 +53,9 @@ Single UPN of a user, commans seperated list of UPNs, or array of objects that c
         }
         else {
             # Get the 7 day message trace for the primary SMTP address as the sender
-            Out-LogFile ("Gathering messages sent by: " + $PrimarySMTP) -action
+            Out-LogFile ("Gathering messages sent the last 7 days by: " + $PrimarySMTP) -action
 
-            (Get-MessageTrace -Sender $PrimarySMTP) | Out-MultipleFileType -FilePreFix "Message_Trace" -user $User -csv -json
+            (Get-MessageTraceV2 -Sender $PrimarySMTP -StartDate (Get-Date).AddDays(-7) -EndDate (Get-Date).AddDays(1)) | Out-MultipleFileType -FilePreFix "Message_Trace" -user $User -csv -json
         }
         Out-LogFile "Completed collection of Message Trace Data for $User from Exchange Online." -Information
 

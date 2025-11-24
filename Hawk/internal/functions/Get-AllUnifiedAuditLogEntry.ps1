@@ -31,7 +31,10 @@
         }
 
         # build our search command to execute
-        $cmd = $UnifiedSearch + " -StartDate `'" + (get-date ($StartDate) -UFormat %m/%d/%Y) + "`' -EndDate `'" + (get-date ($endDate) -UFormat %m/%d/%Y) + "`' -SessionCommand ReturnLargeSet -resultsize 5000 -sessionid " + (Get-Date -UFormat %H%M%S)
+        # Use ISO format for dates to avoid locale issues
+        $startDateString = $StartDate.ToString("yyyy-MM-ddTHH:mm:ss.fffK")
+        $endDateString = $EndDate.ToString("yyyy-MM-ddTHH:mm:ss.fffK")
+        $cmd = $UnifiedSearch + " -StartDate `'" + $startDateString + "`' -EndDate `'" + $endDateString + "`' -SessionCommand ReturnLargeSet -resultsize 5000 -sessionid " + (Get-Date -UFormat %H%M%S)
         Out-LogFile ("Running Unified Audit Log Search") -Action
         Out-Logfile $cmd -NoDisplay
     
